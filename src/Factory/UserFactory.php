@@ -30,7 +30,7 @@ final class UserFactory extends ModelFactory
     {
         return [
             "email"=>self::faker()->email,
-            "password" => self::faker()->password(8,20),
+            "password" => '$argon2id$v=19$m=65536,t=4,p=1$vPStj3ZFCCvvkksz9MF2+w$vMoZuibsn3N7Jh09RrIZqeo9UZJw6v31S5dEaXuxxEg ',
         ];
     }
 

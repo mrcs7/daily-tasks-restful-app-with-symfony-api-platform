@@ -14,6 +14,8 @@ class UserTest extends ApiTestCase
 {
     use FixturesTrait;
 
+    private $user_id;
+
     public function init()
     {
         self::bootKernel();
@@ -26,18 +28,19 @@ class UserTest extends ApiTestCase
         $em = self::$container->get('doctrine')->getManager();
         $em->persist($user);
         $em->flush();
+        $this->user_id = $user->getId();
     }
 
     /**
      * @test
      */
-    public function it_should_create_user_without_authentication()
+    public function it_should_create_user_without_authentication_and_encode_password()
     {
         $this->init();
         $response = static::createClient()->request('POST', '/api/v1/users',[
             'json' => [
                 "email" => "test87@examlpe.com",
-                "password" => '$argon2id$v=19$m=65536,t=4,p=1$vPStj3ZFCCvvkksz9MF2+w$vMoZuibsn3N7Jh09RrIZqeo9UZJw6v31S5dEaXuxxEg',
+                "password" => 'dev!87',
             ]
         ]);
         $this->assertResponseIsSuccessful();
@@ -46,7 +49,7 @@ class UserTest extends ApiTestCase
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
                 'email' => 'test87@examlpe.com',
-                'password' => 'testtest'
+                'password' => 'dev!87'
             ]
         ]);
         $this->assertResponseIsSuccessful();
@@ -92,7 +95,7 @@ class UserTest extends ApiTestCase
     {
         $this->init();
         $token = $this->userLogin();
-        $response = static::createClient()->request('PUT', '/api/v1/users/6',[
+        $response = static::createClient()->request('PUT', '/api/v1/users/'.$this->user_id,[
             'headers' => ['Authorization' => 'Bearer '.$token],
             'json' => [
                 "email" => "exampleTest@example.com",
@@ -110,7 +113,7 @@ class UserTest extends ApiTestCase
     {
         $this->init();
         $token = $this->userLogin();
-        $response = static::createClient()->request('DELETE', '/api/v1/users/6',[
+        $response = static::createClient()->request('DELETE', '/api/v1/users/'.$this->user_id,[
             'headers' => ['Authorization' => 'Bearer '.$token],
             'json' => [
                 "email" => "exampleTest@example.com",
@@ -126,7 +129,7 @@ class UserTest extends ApiTestCase
     {
         $this->init();
         $token = $this->userLogin();
-        $response = static::createClient()->request('GET', '/api/v1/users/6',[
+        $response = static::createClient()->request('GET', '/api/v1/users/'.$this->user_id,[
             'headers' => ['Authorization' => 'Bearer '.$token],
         ]);
         $this->assertResponseStatusCodeSame(200);

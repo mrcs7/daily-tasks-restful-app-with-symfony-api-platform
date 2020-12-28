@@ -16,10 +16,20 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource(
  *     normalizationContext={"groups"={"tasks:read"}},
  *     denormalizationContext={"groups"={"tasks:write"}},
- *     attributes={"pagination_items_per_page"=5}
+ *     attributes={"pagination_items_per_page"=5},
+ *     collectionOperations={
+ *          "get",
+ *          "post" = { "security_post_denormalize" = "is_granted('TASK_CREATE', object)" }
+ *     },
+ *     itemOperations={
+ *          "get" = { "security" = "is_granted('TASK_READ', object)" },
+ *          "put" = { "security" = "is_granted('TASK_EDIT', object)" },
+ *          "delete" = { "security" = "is_granted('TASK_DELETE', object)" }
+ *     },
  * )
  * @ApiFilter(DateFilter::class, properties={"date"})
  * @ORM\Entity(repositoryClass=TaskRepository::class)
+ * @ORM\EntityListeners({"App\Doctrine\Listeners\TaskSetCreatorListener"})
  */
 class Task
 {

@@ -13,4 +13,6 @@
 - run to create jwt keys and configuration and ensure your .env and .evv.test both have your jwt keys.
 - run tests : php vendor/bin/simple-phpunit
 - run app using symfony built in server through: symfony serve or whatever you like.
-- api documentation : http://127.0.0.1:8000/api/documentation
+- api documentation : http://127.0.0.1:8000/api/documentation.
+- post http://127.0.0.1:8000/api/v1/users are open to create user, it is excluded from authentication.
+- post http://127.0.0.1:8000/login with jsob body email,password to get the token.

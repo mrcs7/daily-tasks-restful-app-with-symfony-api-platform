@@ -161,7 +161,7 @@ class TaskTest extends ApiTestCase
     {
         $this->init();
         $token = $this->userLogin();
-        $task_id= 3;
+        $task_id= 7;
         $response = static::createClient()->request('PUT', '/api/v1/tasks/'.$task_id,[
             'headers' => ['Authorization' => 'Bearer '.$token],
             'json' => [
@@ -181,13 +181,8 @@ class TaskTest extends ApiTestCase
         $this->init();
         $token = $this->userLogin();
         $task_id= 3;
-        $response = static::createClient()->request('PUT', '/api/v1/tasks/'.$task_id,[
+        $response = static::createClient()->request('DELETE', '/api/v1/tasks/'.$task_id,[
             'headers' => ['Authorization' => 'Bearer '.$token],
-            'json' => [
-                "title" => "Test Task2",
-                "date" => "2020-12-28",
-                "status" => 0
-            ]
         ]);
         $this->assertResponseStatusCodeSame(403);
     }
